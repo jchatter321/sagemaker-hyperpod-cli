@@ -1,0 +1,23 @@
+{{- if .Values.certManager.enable }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "hyperpod-ray-endpoint-operator.resourceName" (dict "suffix" "extension-api-cert" "context" $) }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  commonName: extension-api
+  dnsNames:
+  - {{ include "hyperpod-ray-endpoint-operator.resourceName" (dict "suffix" "extension-api" "context" $) }}.{{ .Release.Namespace }}.svc
+  - {{ include "hyperpod-ray-endpoint-operator.resourceName" (dict "suffix" "extension-api" "context" $) }}.{{ .Release.Namespace }}.svc.cluster.local
+  duration: 2160h
+  issuerRef:
+    kind: Issuer
+    name: {{ include "hyperpod-ray-endpoint-operator.resourceName" (dict "suffix" "selfsigned-issuer" "context" $) }}
+  privateKey:
+    rotationPolicy: Always
+  renewBefore: 360h
+  secretName: extension-api-cert
+  subject:
+    organizations:
+    - hyperpod-ray-endpoint-operator
+{{- end }}
