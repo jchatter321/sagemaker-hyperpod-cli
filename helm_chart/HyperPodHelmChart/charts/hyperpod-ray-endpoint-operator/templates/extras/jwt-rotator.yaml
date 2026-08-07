@@ -48,7 +48,9 @@ spec:
                 drop:
                 - ALL
               readOnlyRootFilesystem: true
-          restartPolicy: OnFailure
+          # Never (not OnFailure) so failed pods are preserved for log inspection.
+          # With OnFailure, pods are deleted after backoffLimit and logs are lost.
+          restartPolicy: Never
           securityContext:
             fsGroup: 65532
             runAsGroup: 65532
@@ -110,7 +112,9 @@ spec:
             drop:
             - ALL
           readOnlyRootFilesystem: true
-      restartPolicy: OnFailure
+      # Never (not OnFailure) so failed pods are preserved for log inspection.
+      # With OnFailure, pods are deleted after backoffLimit and logs are lost.
+      restartPolicy: Never
       securityContext:
         fsGroup: 65532
         runAsGroup: 65532

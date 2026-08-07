@@ -36,7 +36,7 @@ spec:
         spec:
           forwardAuth:
             address: "http://{{ include "hyperpod-ray-endpoint-operator.resourceName" (dict "suffix" "auth-middleware" "context" $) }}.{{ .Release.Namespace }}.svc.cluster.local:8080/verify?cluster-uid={{`{{ .RayCluster.UID }}`}}"
-            trustForwardHeader: true
+            trustForwardHeader: false
             addAuthCookiesToResponse:
               - ray_session
             authRequestHeaders:
@@ -52,7 +52,7 @@ spec:
         spec:
           forwardAuth:
             address: "http://{{ include "hyperpod-ray-endpoint-operator.resourceName" (dict "suffix" "auth-middleware" "context" $) }}.{{ .Release.Namespace }}.svc.cluster.local:8080/bearer-auth?cluster-uid={{`{{ .RayCluster.UID }}`}}"
-            trustForwardHeader: true
+            trustForwardHeader: false
             addAuthCookiesToResponse:
               - ray_session
             authRequestHeaders:
@@ -78,7 +78,7 @@ spec:
               services:
                 - name: "{{`{{ .RayCluster.Name }}`}}-head-svc"
                   namespace: "{{`{{ .RayCluster.Namespace }}`}}"
-                  port: 8265
+                  port: {{`{{ .RayCluster.DashboardPort }}`}}
     - kind: IngressRoute
       apiVersion: traefik.io/v1alpha1
       namePrefix: bearer-auth-route
@@ -98,7 +98,7 @@ spec:
               services:
                 - name: "{{`{{ .RayCluster.Name }}`}}-head-svc"
                   namespace: "{{`{{ .RayCluster.Namespace }}`}}"
-                  port: 8265
+                  port: {{`{{ .RayCluster.DashboardPort }}`}}
 ---
 apiVersion: access.sagemaker.amazonaws.com/v1alpha1
 kind: HyperpodRayEndpointAccessStrategy
@@ -122,7 +122,7 @@ spec:
         spec:
           forwardAuth:
             address: "http://{{ include "hyperpod-ray-endpoint-operator.resourceName" (dict "suffix" "auth-middleware" "context" $) }}.{{ .Release.Namespace }}.svc.cluster.local:8080/verify?cluster-uid={{`{{ .RayCluster.UID }}`}}"
-            trustForwardHeader: true
+            trustForwardHeader: false
             addAuthCookiesToResponse:
               - ray_session
             authRequestHeaders:
@@ -138,7 +138,7 @@ spec:
         spec:
           forwardAuth:
             address: "http://{{ include "hyperpod-ray-endpoint-operator.resourceName" (dict "suffix" "auth-middleware" "context" $) }}.{{ .Release.Namespace }}.svc.cluster.local:8080/bearer-auth?cluster-uid={{`{{ .RayCluster.UID }}`}}"
-            trustForwardHeader: true
+            trustForwardHeader: false
             addAuthCookiesToResponse:
               - ray_session
             authRequestHeaders:
@@ -164,7 +164,7 @@ spec:
               services:
                 - name: "{{`{{ .RayCluster.Name }}`}}-head-svc"
                   namespace: "{{`{{ .RayCluster.Namespace }}`}}"
-                  port: 8265
+                  port: {{`{{ .RayCluster.DashboardPort }}`}}
     - kind: IngressRoute
       apiVersion: traefik.io/v1alpha1
       namePrefix: bearer-auth-route
@@ -184,4 +184,4 @@ spec:
               services:
                 - name: "{{`{{ .RayCluster.Name }}`}}-head-svc"
                   namespace: "{{`{{ .RayCluster.Namespace }}`}}"
-                  port: 8265
+                  port: {{`{{ .RayCluster.DashboardPort }}`}}
